@@ -35,6 +35,7 @@
 
     return html`
       <main class="login">
+        ${ui.ThemeMenu ? html`<div class="login-theme"><${ui.ThemeMenu} /></div>` : null}
         <form class="login-card" onSubmit=${submit} noValidate>
           <div class="brand big"><span class="brand-mark"><${Icon} name="layers" size=${22} /></span><h1>Acompanhamento</h1></div>
           <p class="muted">Entre para ver suas demandas e atividades.</p>
@@ -92,6 +93,7 @@
             </nav>` : html`<span class="env-label"><${Icon} name=${SA.ENVS[s.env] ? SA.ENVS[s.env].icon : 'layers'} size=${16} />${SA.ENVS[s.env] ? SA.ENVS[s.env].label : ''}</span>`}
           <div class="spacer"></div>
           <${SyncBadge} />
+          ${ui.ThemeMenu ? html`<${ui.ThemeMenu} />` : null}
           <button type="button" class="icon-btn bell" onClick=${props.onActivity} aria-label=${'Atividade recente' + (unread ? ' (' + unread + ' novas)' : '')} title="Atividade recente">
             <${Icon} name="bell" />${unread ? html`<span class="dot">${unread > 9 ? '9+' : unread}</span>` : null}
           </button>

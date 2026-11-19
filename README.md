@@ -53,7 +53,8 @@ Fontes: [limites do GitHub Pages](https://docs.github.com/en/pages/getting-start
 1. Entre em **<https://script.google.com>** com a sua conta Google e clique em **Novo projeto**. Dê o nome que quiser (ex.: *Acompanhamento*).
 2. Apague o código de exemplo que aparece. Abra o arquivo **`backend/Code.gs`** deste projeto, copie tudo e cole no editor. Salve (Ctrl + S).
 3. **Troque os logins e as senhas.** No começo do código há a lista `USUARIOS`:
-   - `nome` é como a pessoa aparece no sistema;
+   - `id` é o **usuário que a pessoa digita no login**: use o primeiro nome dela, em minúsculas e sem acento nem espaço (ex.: `maria`). Ao digitar no login, tanto faz maiúscula ou minúscula;
+   - `nome` é como a pessoa aparece dentro do sistema (pode ter acento e maiúscula);
    - `senha` precisa ter **pelo menos 8 caracteres**. Se continuar como "troque-esta-senha…", o login é recusado de propósito;
    - mantenha `ambientes` como está (quem acessa o quê).
    Faça isso **aqui no editor do Google, não no arquivo do computador**, para a senha nunca ir parar no GitHub.
@@ -107,7 +108,9 @@ Antes de passar o endereço para as outras pessoas: entre com o seu login, crie 
 
 ### Atualizar o servidor depois de mexer no `Code.gs`
 
-Só salvar **não** atualiza o que está no ar. Vá em **Implantar → Gerenciar implantações**, clique no lápis, em *Versão* escolha **Nova versão** e clique em **Implantar**. A URL continua a mesma.
+Só salvar **não** atualiza o que está no ar. Vá em **Implantar → Gerenciar implantações**, clique no lápis, em *Versão* escolha **Nova versão** e clique em **Implantar**. A URL continua a mesma. **Não use "Nova implantação"** para atualizar: ela cria outro endereço, e o site continua usando o antigo.
+
+**Para ter certeza de que a versão nova entrou no ar:** antes de implantar, aumente o número `VERSAO` no código (de `1` para `2`, depois `3`…) e, depois de implantar, abra a URL do servidor no navegador. Ela mostra `"versao": 2`. Se ainda mostrar o número antigo, a implantação não foi atualizada.
 
 ---
 

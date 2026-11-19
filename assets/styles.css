@@ -38,10 +38,52 @@
   --radius-sm: 8px;
   --focus: 0 0 0 3px rgba(63, 107, 115, .35);
   --font: system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  color-scheme: light dark;
+}
+
+/* Aparência escolhida no menu (sol/lua no topo): o JavaScript coloca data-theme="light" ou "dark"
+   no <html>. Sem escolha ("Automático"), vale o tema do aparelho (bloco @media logo abaixo).
+   As cores escuras ficam repetidas nos dois blocos de propósito: um é para a escolha manual
+   e o outro para o modo automático. */
+:root[data-theme="light"] { color-scheme: light; }
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #181a1d;
+  --surface: #212428;
+  --surface-2: #272b30;
+  --surface-3: #30353b;
+  --border: #343a40;
+  --border-strong: #474e57;
+  --text: #e8e5dd;
+  --text-2: #b2b6bc;
+  --text-3: #868b92;
+
+  --accent: #86b3ba;
+  --accent-strong: #a6cbd1;
+  --accent-soft: #263a3e;
+  --accent-on: #0f1e20;
+
+  --danger: #e3a597;
+  --danger-soft: #3b2b27;
+  --warn: #e0c180;
+  --warn-soft: #3a3322;
+  --ok: #98c4a6;
+  --ok-soft: #26362c;
+  --info: #9bb7d3;
+  --info-soft: #28343f;
+  --violet: #bdaed8;
+  --violet-soft: #332e3d;
+  --slate: #a2adb9;
+  --slate-soft: #2e343b;
+
+  --shadow: 0 1px 2px rgba(0, 0, 0, .35), 0 2px 8px rgba(0, 0, 0, .25);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, .55);
+  --focus: 0 0 0 3px rgba(134, 179, 186, .4);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
     --bg: #181a1d;
     --surface: #212428;
     --surface-2: #272b30;
@@ -188,7 +230,8 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .bell .dot { position: absolute; top: 2px; right: 1px; min-width: 16px; height: 16px; padding: 0 4px; border-radius: 999px; background: var(--accent); color: var(--accent-on); font-size: .68rem; font-weight: 700; display: grid; place-items: center; }
 .who { display: inline-flex; align-items: center; gap: 8px; color: var(--text-2); font-weight: 550; }
 .avatar { display: inline-grid; place-items: center; border-radius: 50%; font-weight: 700; flex: none; color: hsl(var(--h) 28% 28%); background: hsl(var(--h) 30% 85%); }
-@media (prefers-color-scheme: dark) { .avatar { color: hsl(var(--h) 35% 82%); background: hsl(var(--h) 18% 26%); } }
+:root[data-theme="dark"] .avatar { color: hsl(var(--h) 35% 82%); background: hsl(var(--h) 18% 26%); }
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]):not([data-theme="dark"]) .avatar { color: hsl(var(--h) 35% 82%); background: hsl(var(--h) 18% 26%); } }
 
 /* ---------- página ---------- */
 .page { max-width: 1240px; margin: 0 auto; padding: 22px 16px 80px; }
@@ -315,9 +358,14 @@ input[aria-invalid="true"] { border-color: var(--danger); }
 .panel-body { padding: 10px 14px 16px; display: flex; flex-direction: column; gap: 12px; }
 .menu-wrap { position: relative; }
 .menu { position: absolute; right: 0; top: calc(100% + 4px); z-index: 20; min-width: 190px; padding: 5px; background: var(--surface); border: 1px solid var(--border-strong); border-radius: 10px; box-shadow: var(--shadow-lg); display: flex; flex-direction: column; }
-.menu button { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border: 0; background: transparent; text-align: left; border-radius: 7px; }
+.menu button { display: flex; align-items: center; gap: 8px; white-space: nowrap; padding: 8px 10px; border: 0; background: transparent; text-align: left; border-radius: 7px; }
 .menu button:hover { background: var(--surface-2); }
 .menu button.danger { color: var(--danger); }
+.menu button[aria-checked="true"] { color: var(--accent-strong); font-weight: 600; }
+.menu .menu-check { margin-left: auto; }
+.menu .opt { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.25; }
+.menu .opt small { color: var(--text-3); font-size: .76rem; font-weight: 400; }
+.login-theme { position: fixed; top: 12px; right: 12px; z-index: 5; }
 
 /* arquivos */
 .dropzone { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 20px 14px; text-align: center; border: 1.5px dashed var(--border-strong); border-radius: var(--radius); background: var(--surface-2); color: var(--text-2); cursor: pointer; transition: background .12s, border-color .12s; }

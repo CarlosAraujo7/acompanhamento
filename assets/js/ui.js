@@ -39,6 +39,9 @@
     list: ['M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01'],
     user: ['M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8z'],
     clock: ['M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM12 6v6l4 2'],
+    sun: ['M12 17a5 5 0 1 0 0-10 5 5 0 0 0 0 10zM12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42'],
+    moon: ['M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z'],
+    monitor: ['M20 3H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2zM8 21h8M12 17v4'],
     inbox: ['M22 12h-6l-2 3h-4l-2-3H2M5.45 5.11L2 12v6a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2v-6l-3.45-6.89A2 2 0 0 0 16.76 4H7.24a2 2 0 0 0-1.79 1.11z'],
   };
 
@@ -172,5 +175,43 @@
     }, [open]);
   }
 
-  SA.ui = { Icon: Icon, Modal: Modal, ToastHost: ToastHost, DialogHost: DialogHost, Avatar: Avatar, StatusSelect: StatusSelect, Segmented: Segmented, useTick: useTick, useDismiss: useDismiss };
+  /* Escolha de aparência: Automático (segue o aparelho), Claro ou Escuro. Fica salva neste aparelho. */
+  const THEME_OPTIONS = [
+    { id: 'auto', label: 'Automático', hint: 'segue o aparelho', icon: 'monitor' },
+    { id: 'light', label: 'Claro', hint: '', icon: 'sun' },
+    { id: 'dark', label: 'Escuro', hint: '', icon: 'moon' },
+  ];
+  function ThemeMenu() {
+    const theme = SA.theme || { get: function () { return 'auto'; }, set: function () {} };
+    const openPair = useState(false);
+    const open = openPair[0], setOpen = openPair[1];
+    const modePair = useState(theme.get());
+    const mode = modePair[0], setMode = modePair[1];
+    const ref = useRef(null);
+    useDismiss(open, ref, function () { setOpen(false); });
+    // se a escolha mudar em outra aba/janela, o ícone e o menu acompanham
+    useEffect(function () {
+      const sync = function () { setMode(theme.get()); };
+      window.addEventListener('sa-theme', sync);
+      return function () { window.removeEventListener('sa-theme', sync); };
+    }, []);
+    const current = THEME_OPTIONS.filter(function (o) { return o.id === mode; })[0] || THEME_OPTIONS[0];
+    return html`
+      <div class="menu-wrap" ref=${ref}>
+        <button type="button" class="icon-btn" aria-haspopup="menu" aria-expanded=${open ? 'true' : 'false'}
+          aria-label=${'Aparência: ' + current.label} title=${'Aparência: ' + current.label} onClick=${function () { setOpen(!open); }}>
+          <${Icon} name=${current.icon} />
+        </button>
+        ${open ? html`<div class="menu" role="menu" aria-label="Aparência">
+          ${THEME_OPTIONS.map(function (o) {
+            return html`<button type="button" key=${o.id} role="menuitemradio" aria-checked=${mode === o.id ? 'true' : 'false'}
+              onClick=${function () { theme.set(o.id); setMode(o.id); setOpen(false); }}>
+              <${Icon} name=${o.icon} size=${15} /><span class="opt"><span>${o.label}</span>${o.hint ? html`<small>${o.hint}</small>` : null}</span>${mode === o.id ? html`<${Icon} name="check" size=${15} class="menu-check" />` : null}
+            </button>`;
+          })}
+        </div>` : null}
+      </div>`;
+  }
+
+  SA.ui = { Icon: Icon, Modal: Modal, ToastHost: ToastHost, DialogHost: DialogHost, Avatar: Avatar, StatusSelect: StatusSelect, Segmented: Segmented, ThemeMenu: ThemeMenu, useTick: useTick, useDismiss: useDismiss };
 })((window.SA = window.SA || {}));
